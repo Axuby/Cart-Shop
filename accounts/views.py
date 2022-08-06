@@ -11,6 +11,9 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 
+from cart.models import Cart, CartItem
+from cart.views import _get_cart_id
+
 
 from .forms import RegistrationForm, UserForm, UserProfileForm
 from .models import Account, UserProfile
@@ -69,6 +72,20 @@ def login(request):
 
         user = auth.authenticate(email=email, password=password)
         if user is not None:
+            try:
+                # cart = Cart.objects.get(cart=_get_cart_id(request))
+                # cart_item = CartItem.filter(cart=cart).exists()
+                is_in_cart = CartItem.objects.filter(
+                    cart__cart_id=_get_cart_id(request)).exists()
+                if is_in_cart:
+                    cart_item = CartItem.objects.get(
+                        cart__cart_id=_get_cart_id(request))
+                    cart_item.user = user
+                    cart_item.save()
+
+            except:
+                pass
+
             auth.login(request, user)
             messages.success(request, "You're Logged In!")
             return redirect('dashboard')

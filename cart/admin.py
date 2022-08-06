@@ -11,7 +11,7 @@ class CartAdmin(admin.ModelAdmin):
 
 
 class CartItemAdmin(admin.ModelAdmin):
-    list_display = ["product", "cart", "is_active", "quantity"]
+    list_display = ["product", "cart", "is_active", "quantity", ]
 
 
 admin.site.register(Cart, CartAdmin)
