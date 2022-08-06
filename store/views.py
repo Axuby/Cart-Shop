@@ -99,7 +99,12 @@ class ProductDetailView(DetailView):
     def get_object(self):
         product = Product.objects.get(
             category__slug=self.kwargs["category_slug"], slug=self.kwargs["product_slug"])
-
+        # print(list(product.variation_set.colors()))
+        # print(product.variation_set.colors, 1)
+        # for i in product.variation_set.colors():
+        #     print(i.variation_value)
+        # for i in product.variation_set.size():
+        #     print(i.variation_value)
     # is_in_cart = CartItem.objects.get(
     #     cart__cart_id=_get_cart_id(self.request), product=product).exists()
 
@@ -111,6 +116,7 @@ class ProductDetailView(DetailView):
         #     category__slug=self.object.get("category_slug"), slug=self.object.get("product_slug"))
         # is_in_cart = CartItem.objects.get(
         #     cart__cart_id=_get_cart_id(self.request), product=product).exists()
+        print(context.get(self.context_object_name))
         context["is_in_cart"] = CartItem.objects.filter(
             cart__cart_id=_get_cart_id(self.request), product=context.get(self.context_object_name)).exists()
 

@@ -31,14 +31,15 @@
 
 
 		<hr>
-			<div class="row">
+			<div class="row"><p>{{i}}</p>
 				
-					<div class="item-option-select">
+				<div class="item-option-select">
 					<h6>Choose Color</h6>
 					<div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
 						<select name="color"  id="inputState" class="form-control"  required>
 							<option value="" disabled selected> Select</option>
 								{% for i in product.variation_set.colors %}
+								<strong><p>{{i}}</p></strong>
 							<option value="{{ i.variation_value|lower}}"> {{ i.variation_value|capfirst}} </option>
 							{% endfor %}
 						</select>
@@ -50,7 +51,7 @@
 					<h6> Choose Size</h6>
 					<select name="size" id="inputState" class="form-control" required >
 						<option value="" disabled selected>Select</option>
-						{% for i in product.variation_set.sizes %}
+						{% for i in product.variation_set.size %}
 							<option value="{{ i.variation_value|lower}}">{{ i.variation_value|capfirst}}</option>
 						 {% endfor %}
 						</select>
@@ -61,12 +62,12 @@
 			{% if product.stock <= 0 %}
 				<h5 class="text-danger"> Out of Stock</h5>
 				{% else %}	
-					{% if is_in_cart %}
+					{% comment %} {% if is_in_cart %}
 					<a href="#" class="btn  btn-success"> <span class="text">Added to cart</span> <i class="fas fa-check"></i>  </a>
 					<a href="{% url 'cart' %}" class="btn  btn-outline-primary"> <span class="text">View Cart</span> <i class="fas fa-eye"></i>  </a>
-					{% else %}	
+					{% else %}	 {% endcomment %}
 					<button type="submit" class="btn  btn-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </button>
-					{% endif %}
+					{% comment %} {% endif %} {% endcomment %}
 			{% endif %}
 			</article> 
 		</form>

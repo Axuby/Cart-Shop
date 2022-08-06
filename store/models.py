@@ -27,10 +27,10 @@ class Product(models.Model):
 
 class VariationManager(models.Manager):
     def colors(self):
-        return super(VariationManager, self).filter(variation_category='color', is_active=True)
+        return super(VariationManager, self).get_queryset().filter(variation_category='color', is_active=True)
 
     def size(self):
-        return super(VariationManager, self).filter(variation_category='size', is_active=True)
+        return super(VariationManager, self).get_queryset().filter(variation_category='size', is_active=True)
 
 
 class Variation(models.Model):
@@ -48,4 +48,4 @@ class Variation(models.Model):
     objects = VariationManager()
 
     def __str__(self) -> str:
-        return self.product.product_name
+        return self.variation_value

@@ -71,42 +71,68 @@ def add_to_cart(request, product_id):
     product_by_variation = []
     if request.method == 'POST':
         for item in request.POST:
+            print(request.POST)
             key = item
             value = request.POST[key]
+            print(key, value)
 
             # get product variation instance
-            variation = Variation.objects.get(
+            variation = Variation.objects.filter(
                 variation_category=key, variation_value=value, product=product)
             print(variation)
 
             product_by_variation.append(variation)
-    # get the cart
+    # try get the cart
     try:
         cart = Cart.objects.get(cart_id=_get_cart_id(request))
 
-        # create the new cart_item if it doesn't exist
+        # create the new cart if it doesn't exist
     except Cart.DoesNotExist:
 
         cart = Cart.objects.create(cart_id=_get_cart_id(request))
         cart.save()
 
     # get and put product in cart to be CartItem
-    try:
-        cart_item = CartItem.objects.get(cart=cart, product=product)
-        if len(product_by_variation) > 0:
-            cart_item.variations.clear()
-            if item in product_by_variation:
-                cart_item.variations.add(item)
-        cart_item.quantity += 1
-        cart_item.save()
-    except CartItem.DoesNotExist:
+    does_cart_item_exists = CartItem.objects.filter(
+        product=product, cart=cart).exists()
+
+    if does_cart_item_exists:
+        cart_item = CartItem.objects.filter(product=product, cart=cart)
+    # existing var from DB,current var from product var,
+    # and item id from DB
+        existing_variation_list = []
+        id = []
+        for item in cart_item:
+            existing_variation = item.variations.all()
+            existing_variation_list.append(existing_variation)
+            id.append(item.id)
+        print(existing_variation_list)
+        print(item)
+        print(item.variations)
+
+        if product_by_variation in existing_variation_list:
+            index = existing_variation_list.index(product_by_variation)
+            item_id = id[index]
+
+            item = CartItem.objects.get(product=product, id=item_id)
+            item.quantity += 1
+            item.save()
+
+        else:
+            cart_item = CartItem.objects.create(
+                cart=cart, product=product, quantity=1)
+            if len(product_by_variation) > 0:
+                cart_item.variations.clear()
+                cart_item.variations.add(*product_by_variation)
+            cart_item.save()
+    else:
+
         cart_item = CartItem.objects.create(
             cart=cart, product=product, quantity=1)
         if len(product_by_variation) > 0:
             cart_item.variations.clear()
-            if item in product_by_variation:
-                cart_item.variations.add(item)
-            cart_item.save()
+            cart_item.variations.add(*product_by_variation)
+        cart_item.save()
 
     return redirect('cart')
 
@@ -114,6 +140,8 @@ def add_to_cart(request, product_id):
 def remove_from_cart(request, product_id):
     cart = Cart.objects.get(cart_id=_get_cart_id(request))
     product = get_object_or_404(Product, id=product_id)
+    print(product)
+    print(cart)
     cart_item = CartItem.objects.get(cart=cart, product=product)
     if cart_item.quantity > 1:
         cart_item.quantity -= 1
