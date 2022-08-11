@@ -14,7 +14,6 @@ from django.core.mail import EmailMessage
 from cart.models import Cart, CartItem
 from cart.views import _get_cart_id
 
-
 from .forms import RegistrationForm, UserForm, UserProfileForm
 from .models import Account, UserProfile
 
@@ -66,7 +65,6 @@ def register(request):
 
 def login(request):
     if request.method == "POST":
-        print(request.POST)
         email = request.POST["email"]
         password = request.POST["password"]
 
@@ -127,7 +125,7 @@ def activate(request, uidb64, token):
         return redirect('register')
 
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def dashboard(request):
     return render(request, "accounts/dashboard.html")
 
