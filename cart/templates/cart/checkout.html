@@ -14,6 +14,7 @@
 <div class="class-body">
     <h4 class="card-title mb-4"> Bulling Address</h4>
     <form action="" method="POST">
+        {% csrf_token %}
         <div class="form-row">
             <div class="col form-group">
                 <label for="">First Name</label>
@@ -64,7 +65,6 @@
                 <textarea type="text" rows="2" name="order-note" id="" class="form-control" required></textarea>
             
         </div>
-    </form>
 </div>
 </div> <!-- card.// -->
 
@@ -82,6 +82,7 @@
 </tr>
 </thead>
 <tbody>
+    {{cart_items}}
 	{% for cart_item in cart_items %}
 <tr>
 	<td>
@@ -89,13 +90,19 @@
 			<div class="aside"><img src="{{ cart_item.product.image.url }}" class="img-sm"></div>
 			<figcaption class="info">
 				<a href="{{ cart_item.product.get_absolute_url }}" class="title text-dark">{{cart_item.product.product_name }}</a>
-				<p class="text-muted small">Color: 25 Mpx<br> Size: Canon </p>
+				<p class="text-muted small">
+                {% if cart_item.variations.all %}
+						{% for item in cart_item.variations.all %}
+						{{item.variation_category | capfirst}} : {{ item.variation_value }} <br>
+						{% endfor %}
+					{% endif %}
+                    </p>
 			</figcaption>
 		</figure>
 	</td>
-	<td>
-         {{cart_item.quantity}}
-	</td>
+            <td>
+                <label for="">{{cart_item.quantity}}</label>
+            </td>
 	<td> 
 		<div class="price-wrap"> 
 			<var class="price">#{{cart_item.sub_total}}</var> 
@@ -106,9 +113,10 @@
 	{% endfor %}
 </tbody>
 </table>
-			<a href="{% url "checkout" %}" class="btn btn-primary btn-block"> Place Order</a>
+			<button type="submit" name="submit" class="btn btn-primary btn-block">Place Order</button>
 			<a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
-		</div> <!-- card-body.// -->
+        </form>
+        </div> <!-- card-body.// -->
 		</div> <!-- card.// -->
 
 </aside> <!-- col.// -->

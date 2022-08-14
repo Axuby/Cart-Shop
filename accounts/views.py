@@ -1,4 +1,4 @@
-from cProfile import Profile
+import requests
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
@@ -86,7 +86,18 @@ def login(request):
 
             auth.login(request, user)
             messages.success(request, "You're Logged In!")
-            return redirect('dashboard')
+
+            url = request.META.get("HTTP_REFERER")
+            try:
+                query = requests.utils.urlparse(url).query
+                # next=/cart/checkout
+                params = dict(x.split('=') for x in query.split('&'))
+                if "next" in params:
+                    nextPage = params["next"]
+                    return redirect(nextPage)
+
+            except:
+                return redirect('dashboard')
 
         # user = Account.objects.get(email=email)
         # if user.password == password:
