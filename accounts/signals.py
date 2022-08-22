@@ -6,10 +6,7 @@ from django.dispatch import receiver
 @receiver(post_save, sender=Account)
 def create_profile(sender, instance, created, **kwargs):
     if created:
-        print(instance.userprofile)
         user_profile = UserProfile(user=instance)
-        user_profile.save()
-        user_profile.follows.add(instance)
         user_profile.save()
     else:
         try:
