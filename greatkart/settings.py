@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
-import django_heroku
+import django_on_heroku
 from django.contrib.messages import constants as messages
 from pathlib import Path
 
@@ -167,7 +167,7 @@ MESSAGE_TAGS = {
 }
 
 
-django_heroku.settings(locals())
+django_on_heroku.settings(locals())
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'azubuinesamuel@gmail.com'
