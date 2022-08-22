@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import django_heroku
 from django.contrib.messages import constants as messages
 from pathlib import Path
 
@@ -102,6 +103,17 @@ DATABASES = {
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': CONFIG('DB_NAME'),
+#         'USER': CONFIG('DB_USER'),
+#         'PASSWORD': CONFIG('DB_PASSWORD'),
+#         'HOST': CONFIG('DB_HOST'),
+#         'PORT': CONFIG('DB_PORT'),
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -155,10 +167,11 @@ MESSAGE_TAGS = {
 }
 
 
+django_heroku.settings(locals())
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'azubuinesamuel@gmail.com'
-EMAIL_HOST_PASSWORD = ''
+# EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 
 # Default primary key field type
