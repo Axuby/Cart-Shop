@@ -1,8 +1,33 @@
-from distutils.command.upload import upload
+
+from django.db.models import Q
 from django.urls import reverse
 from django.db import models
 from category.models import Category
 # Create your models here.
+
+
+class ProductQueryset(models.QuerySet):
+    def is_public(self):
+        return self.filter(is_available=True)
+
+    def search(self, query, user=None):
+        lookup = Q(product_name__icontains=query) | Q(
+            description__icontains=query)
+        qs = self.is_public().filter(lookup)
+        if user is not None:
+            qs2 = self.filter(user=user)
+            qs = (qs | qs2).distinct()
+        return qs
+
+
+class ProductManager(models.Manager):
+
+    def get_queryset(self, *args, **kwargs):
+
+        return ProductQueryset(self.model, using=self._db)
+
+    def search(self, query, user=None):
+        return self.get_queryset().search(user=user)
 
 
 class Product(models.Model):

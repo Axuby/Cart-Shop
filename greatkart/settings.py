@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'store',
     'cart',
     'orders',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -92,6 +93,14 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# DATABASES = {
+#     'ENGINE': 'django.db.backends.postgresql',
+#     "HOST": "ec2-34-199-68-114.compute-1.amazonaws.com",
+#     "Database": "df20jpt6qlq67d",
+#     "USER": "lgqvzqmotsppni",
+#     "PORT": 5432,
+#     "PASSWORD": "b250c02c5617b06396121e342020fa9f93c203ba611c7fcada9f36ea0a3e8b99",
+# }
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
